@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # CIS Microsoft Windows Server 2025 Stand-alone v1.0.0 L1 - Ansible over SSH
 
 Proyecto de hardening generado a partir del archivo CIS `.audit` proporcionado.
