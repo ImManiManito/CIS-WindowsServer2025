@@ -63,8 +63,7 @@ Edita `inventory/hosts.ini`:
 
 ```ini
 [windows_2025]
-InntecProfact ansible_host=10.0.0.10 ansible_user=ansible-cis
-Contpaq       ansible_host=10.0.0.11 ansible_user=ansible-cis
+SRV01 ansible_host=10.0.0.10 ansible_user=ansible-cis
 
 [windows_2025:vars]
 ansible_connection=ssh
@@ -185,6 +184,3 @@ cis_windows_server_2025_standalone_l1_ansible/
             ├── registry.yml
             └── banner.yml
 ```
-=======
-# CIS-WindowsServer2025
->>>>>>> 7f87ba4712b63ddacfcc1762841bbbedb19f0158
