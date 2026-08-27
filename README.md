@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CIS Microsoft Windows Server 2025 Stand-alone v1.0.0 L1 - Ansible over SSH
 
 Proyecto de hardening generado a partir del archivo CIS `.audit` proporcionado.
@@ -185,3 +186,6 @@ cis_windows_server_2025_standalone_l1_ansible/
             ├── registry.yml
             └── banner.yml
 ```
+=======
+# CIS-WindowsServer2025
+>>>>>>> 7f87ba4712b63ddacfcc1762841bbbedb19f0158
