@@ -1,0 +1,27 @@
+---
+# ================================================================
+# Transporte / entorno
+# ================================================================
+# El inventario usa OpenSSH desde un nodo de control Ubuntu.
+# El shell predeterminado de OpenSSH en Windows DEBE ser PowerShell.
+# La cuenta SSH usada por Ansible debe disponer de privilegios administrativos
+# porque los controles CIS modifican HKLM, secedit, auditoria y privilegios.
+
+cis_require_administrator: true
+cis_verify_ssh_powershell: true
+
+# ================================================================
+# Overrides del benchmark
+# ================================================================
+# Legal banner is intentionally off until Legal/HR approves the wording.
+cis_apply_logon_banner: false
+
+# Renaming built-in accounts may affect automation/monitoring that assumes names.
+cis_rename_builtin_accounts: false
+
+# Example:
+# cis_administrator_new_name: "SrvLocalAdmin"
+# cis_guest_new_name: "SrvLocalGuest"
+
+# If a service requires a user right that conflicts with CIS, override the entire
+# cis_user_rights list in a host/group vars file after documenting the exception.

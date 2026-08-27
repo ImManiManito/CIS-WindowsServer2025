@@ -1,0 +1,8 @@
+---
+- name: Apply CIS advanced audit subcategories
+  ansible.windows.win_audit_policy_system:
+    subcategory: "{{ item.subcategory }}"
+    audit_type: "{{ item.audit_type }}"
+  loop: "{{ cis_audit_policies }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.subcategory }}"

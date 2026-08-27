@@ -1,0 +1,37 @@
+---
+- name: Verify connection is using PowerShell over SSH
+  ansible.windows.win_powershell:
+    script: |
+      [pscustomobject]@{
+        PowerShellVersion = $PSVersionTable.PSVersion.ToString()
+        ProcessPath       = (Get-Process -Id $PID).Path
+        User              = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+        IsAdministrator   = ([System.Security.Principal.WindowsPrincipal]::new(
+          [System.Security.Principal.WindowsIdentity]::GetCurrent()
+        )).IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
+        OpenSSHDefaultShell = (Get-ItemProperty -Path 'HKLM:\SOFTWARE\OpenSSH' -Name DefaultShell -ErrorAction SilentlyContinue).DefaultShell
+      }
+  register: cis_ssh_preflight
+  changed_when: false
+  when: cis_verify_ssh_powershell | bool
+
+- name: Require an administrative SSH session
+  ansible.builtin.assert:
+    that:
+      - cis_ssh_preflight.output[0].IsAdministrator | bool
+    fail_msg: >-
+      The SSH account does not have an administrative token. CIS hardening requires
+      local administrator privileges for registry, security policy, audit policy,
+      services and user-right changes.
+  when:
+    - cis_verify_ssh_powershell | bool
+    - cis_require_administrator | bool
+
+- name: Show SSH/PowerShell preflight information
+  ansible.builtin.debug:
+    msg:
+      - "Remote user: {{ cis_ssh_preflight.output[0].User }}"
+      - "PowerShell: {{ cis_ssh_preflight.output[0].PowerShellVersion }}"
+      - "Administrator: {{ cis_ssh_preflight.output[0].IsAdministrator }}"
+      - "OpenSSH DefaultShell: {{ cis_ssh_preflight.output[0].OpenSSHDefaultShell | default('not configured') }}"
+  when: cis_verify_ssh_powershell | bool

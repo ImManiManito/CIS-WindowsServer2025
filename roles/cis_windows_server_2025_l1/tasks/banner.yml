@@ -1,0 +1,14 @@
+---
+- name: Configure legal notice caption
+  ansible.windows.win_regedit:
+    path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System
+    name: LegalNoticeCaption
+    data: "{{ cis_legal_notice_caption }}"
+    type: string
+
+- name: Configure legal notice text
+  ansible.windows.win_regedit:
+    path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System
+    name: LegalNoticeText
+    data: "{{ cis_legal_notice_text }}"
+    type: string

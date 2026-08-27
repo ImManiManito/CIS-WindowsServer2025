@@ -1,0 +1,42 @@
+---
+- name: Run SSH and privilege preflight checks
+  ansible.builtin.include_tasks: preflight.yml
+
+- name: Verify supported Windows Server version and stand-alone/member role
+  ansible.windows.win_powershell:
+    script: |
+      $os = Get-CimInstance Win32_OperatingSystem
+      $cs = Get-CimInstance Win32_ComputerSystem
+      [pscustomobject]@{ Caption=$os.Caption; DomainRole=$cs.DomainRole }
+  register: cis_platform
+  changed_when: false
+
+- name: Fail when target is not Windows Server 2025
+  ansible.builtin.assert:
+    that:
+      - "'2025' in (cis_platform.output[0].Caption | string)"
+    fail_msg: "This role is intended for Microsoft Windows Server 2025 only."
+
+- name: Apply CIS account/password policies
+  ansible.builtin.include_tasks: account_policies.yml
+  when: cis_apply_account_policies | bool
+
+- name: Apply CIS local account controls
+  ansible.builtin.include_tasks: local_accounts.yml
+  when: cis_apply_account_controls | bool
+
+- name: Apply CIS user rights assignments
+  ansible.builtin.include_tasks: user_rights.yml
+  when: cis_apply_user_rights | bool
+
+- name: Apply CIS advanced audit policy
+  ansible.builtin.include_tasks: audit_policy.yml
+  when: cis_apply_audit_policy | bool
+
+- name: Apply CIS registry settings
+  ansible.builtin.include_tasks: registry.yml
+  when: cis_apply_registry | bool
+
+- name: Apply optional legal logon banner
+  ansible.builtin.include_tasks: banner.yml
+  when: cis_apply_logon_banner | bool

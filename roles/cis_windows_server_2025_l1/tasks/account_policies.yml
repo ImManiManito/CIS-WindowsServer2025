@@ -1,0 +1,9 @@
+---
+- name: Apply local security policy settings
+  community.windows.win_security_policy:
+    section: "{{ item.section }}"
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  loop: "{{ cis_security_policies }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.key }}"

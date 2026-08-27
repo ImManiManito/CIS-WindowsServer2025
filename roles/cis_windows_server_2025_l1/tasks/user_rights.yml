@@ -1,0 +1,9 @@
+---
+- name: Set CIS user rights assignments
+  ansible.windows.win_user_right:
+    name: "{{ item.name }}"
+    users: "{{ item.users }}"
+    action: set
+  loop: "{{ cis_user_rights }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.name }}"

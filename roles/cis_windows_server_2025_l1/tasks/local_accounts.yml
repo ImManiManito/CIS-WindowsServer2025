@@ -1,0 +1,22 @@
+---
+- name: Disable built-in Guest account by RID 501
+  ansible.windows.win_powershell:
+    script: |
+      $u = Get-LocalUser | Where-Object { $_.SID.Value -match '-501$' }
+      if ($u -and $u.Enabled) { Disable-LocalUser -Name $u.Name; $Ansible.Changed = $true }
+      else { $Ansible.Changed = $false }
+
+- name: Rename built-in Administrator and Guest accounts when explicitly enabled
+  ansible.windows.win_powershell:
+    script: |
+      $targets = @(
+        @{ Rid='-500$'; NewName='{{ cis_administrator_new_name }}' },
+        @{ Rid='-501$'; NewName='{{ cis_guest_new_name }}' }
+      )
+      $changed = $false
+      foreach ($t in $targets) {
+        $u = Get-LocalUser | Where-Object { $_.SID.Value -match $t.Rid }
+        if ($u -and $u.Name -ne $t.NewName) { Rename-LocalUser -Name $u.Name -NewName $t.NewName; $changed = $true }
+      }
+      $Ansible.Changed = $changed
+  when: cis_rename_builtin_accounts | bool

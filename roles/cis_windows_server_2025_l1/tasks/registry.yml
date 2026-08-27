@@ -1,0 +1,22 @@
+---
+- name: Apply CIS DWORD and string registry policies
+  ansible.windows.win_regedit:
+    path: "{{ item.path }}"
+    name: "{{ item.name }}"
+    data: "{{ item.value }}"
+    type: "{{ item.type }}"
+    state: present
+  loop: "{{ cis_registry_settings }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.name }}"
+
+- name: Apply unambiguous CIS multi-string registry policies
+  ansible.windows.win_regedit:
+    path: "{{ item.path }}"
+    name: "{{ item.name }}"
+    data: "{{ item.value }}"
+    type: multistring
+    state: present
+  loop: "{{ cis_registry_multistring_settings | selectattr('enabled', 'equalto', true) | list }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.name }}"

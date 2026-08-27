@@ -1,0 +1,18 @@
+---
+- name: CIS Microsoft Windows Server 2025 Stand-alone v1.0.0 L1 hardening over SSH
+  hosts: windows_2025
+  gather_facts: true
+
+  pre_tasks:
+    - name: Require ansible-core 2.18 or newer for supported Windows SSH
+      ansible.builtin.assert:
+        that:
+          - ansible_version.full is version('2.18', '>=')
+        fail_msg: >-
+          Windows over SSH is officially supported starting with ansible-core 2.18.
+          Upgrade the Ubuntu control node before applying this baseline.
+      delegate_to: localhost
+      run_once: true
+
+  roles:
+    - role: cis_windows_server_2025_l1
