@@ -1,14 +1,47 @@
 ---
-- name: Apply CIS DWORD and string registry policies
+- name: Apply CIS DWORD and string HKLM registry policies
   ansible.windows.win_regedit:
     path: "{{ item.path }}"
     name: "{{ item.name }}"
     data: "{{ item.value }}"
     type: "{{ item.type }}"
     state: present
-  loop: "{{ cis_registry_settings }}"
+  loop: "{{ cis_registry_settings | rejectattr('path', 'match', '^HKU:') | list }}"
   loop_control:
     label: "{{ item.id }} - {{ item.name }}"
+
+- name: Get local Windows user profiles
+  ansible.windows.win_shell: |
+    Get-CimInstance Win32_UserProfile |
+      Where-Object {
+        $_.LocalPath -and
+        $_.SID -and
+        -not $_.Special
+      } |
+      Select-Object SID, LocalPath |
+      ConvertTo-Json -Compress
+  register: cis_user_profiles
+  changed_when: false
+
+- name: Parse Windows user profiles
+  ansible.builtin.set_fact:
+    cis_user_profiles_list: >-
+      {{
+        cis_user_profiles.stdout
+        | from_json
+        | list
+      }}
+
+- name: Apply CIS DWORD and string HKU registry policies
+  ansible.windows.win_regedit:
+    path: "{{ item.1.path | regex_replace('^HKU:', 'HKU:\\' ~ item.0.SID) }}"
+    name: "{{ item.1.name }}"
+    data: "{{ item.1.value }}"
+    type: "{{ item.1.type }}"
+    state: present
+  loop: "{{ cis_user_profiles_list | product(cis_registry_settings | selectattr('path', 'match', '^HKU:') | list) | list }}"
+  loop_control:
+    label: "{{ item.0.SID }} - {{ item.1.id }} - {{ item.1.name }}"
 
 - name: Apply unambiguous CIS multi-string registry policies
   ansible.windows.win_regedit:

@@ -2,8 +2,30 @@
 - name: Set CIS user rights assignments
   ansible.windows.win_user_right:
     name: "{{ item.name }}"
-    users: "{{ item.users }}"
+    users: "{{ item.users | map('extract', cis_sid_map) | list }}"
     action: set
   loop: "{{ cis_user_rights }}"
   loop_control:
     label: "{{ item.id }} - {{ item.name }}"
+  vars:
+    cis_sid_map:
+      Administrators: "S-1-5-32-544"
+      Guests: "S-1-5-32-546"
+      Users: "S-1-5-32-545"
+      "Authenticated Users": "S-1-5-11"
+      Everyone: "S-1-1-0"
+      "LOCAL SERVICE": "S-1-5-19"
+      "Local Service": "S-1-5-19"
+      "NETWORK SERVICE": "S-1-5-20"
+      "Network Service": "S-1-5-20"
+      SERVICE: "S-1-5-6"
+      Service: "S-1-5-6"
+      "Remote Desktop Users": "S-1-5-32-555"
+      "Backup Operators": "S-1-5-32-551"
+      "Power Users": "S-1-5-32-547"
+      "Print Operators": "S-1-5-32-550"
+      "IIS_IUSRS": "IIS_IUSRS"
+      "Window Manager Group": "Window Manager Group"
+      "NT SERVICE\\WdiServiceHost": "NT SERVICE\\WdiServiceHost"
+      "NT VIRTUAL MACHINE\\Virtual Machines": "NT VIRTUAL MACHINE\\Virtual Machines"
+      "Window Manager Group": "S-1-5-90-0"

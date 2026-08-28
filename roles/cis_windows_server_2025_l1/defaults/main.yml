@@ -882,7 +882,7 @@ cis_registry_settings:
   type: dword
   value: 1
 - id: 18.10.92.2.1
-  title: Ensure 'Prevent users from modifying settings' is set to 'Enabled'
+  title: Ensure 'Prevent users from modifying settings' is set to 'Disabled'
   path: HKLM:\Software\Policies\Microsoft\Windows Defender Security Center\App and Browser protection
   name: DisallowExploitProtectionOverride
   type: dword
@@ -1589,7 +1589,7 @@ cis_registry_settings:
   path: HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon
   name: PasswordExpiryWarning
   type: dword
-  value: '@PASSWORD_AGE_PROMPT@'
+  value: 14
 - id: 2.3.7.7
   title: 'Ensure ''Interactive logon: Smart card removal behavior'' is set to ''Lock Workstation'' or higher'
   path: HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon

@@ -13,6 +13,7 @@
       }
   register: cis_ssh_preflight
   changed_when: false
+  check_mode: false
   when: cis_verify_ssh_powershell | bool
 
 - name: Require an administrative SSH session

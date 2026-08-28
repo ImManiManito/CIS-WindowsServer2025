@@ -10,6 +10,7 @@
       [pscustomobject]@{ Caption=$os.Caption; DomainRole=$cs.DomainRole }
   register: cis_platform
   changed_when: false
+  check_mode: false
 
 - name: Fail when target is not Windows Server 2025
   ansible.builtin.assert:
