@@ -1310,49 +1310,49 @@ cis_registry_settings:
   value: 1
 - id: 19.5.1.1
   title: Ensure 'Turn off toast notifications on the lock screen' is set to 'Enabled'
-  path: HKCU:\Software\Policies\Microsoft\Windows\CurrentVersion\PushNotifications
+  path: HKU:\Software\Policies\Microsoft\Windows\CurrentVersion\PushNotifications
   name: NoToastApplicationNotificationOnLockScreen
   type: dword
   value: 1
 - id: 19.7.26.1
   title: Ensure 'Prevent users from sharing files within their profile.' is set to 'Enabled'
-  path: HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+  path: HKU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
   name: NoInplaceSharing
   type: dword
   value: 1
 - id: 19.7.44.1
   title: Ensure 'Always install with elevated privileges' is set to 'Disabled'
-  path: HKCU:\Software\Policies\Microsoft\Windows\Installer
+  path: HKU:\Software\Policies\Microsoft\Windows\Installer
   name: AlwaysInstallElevated
   type: dword
   value: 0
 - id: 19.7.5.1
   title: Ensure 'Do not preserve zone information in file attachments' is set to 'Disabled'
-  path: HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments
+  path: HKU:\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments
   name: SaveZoneInformation
   type: dword
   value: 2
 - id: 19.7.5.2
   title: Ensure 'Notify antivirus programs when opening attachments' is set to 'Enabled'
-  path: HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments
+  path: HKU:\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments
   name: ScanWithAntiVirus
   type: dword
   value: 3
 - id: 19.7.8.1
   title: Ensure 'Configure Windows spotlight on lock screen' is set to 'Disabled'
-  path: HKCU:\Software\Policies\Microsoft\Windows\CloudContent
+  path: HKU:\Software\Policies\Microsoft\Windows\CloudContent
   name: ConfigureWindowsSpotlight
   type: dword
   value: 2
 - id: 19.7.8.2
   title: Ensure 'Do not suggest third-party content in Windows spotlight' is set to 'Enabled'
-  path: HKCU:\Software\Policies\Microsoft\Windows\CloudContent
+  path: HKU:\Software\Policies\Microsoft\Windows\CloudContent
   name: DisableThirdPartySuggestions
   type: dword
   value: 1
 - id: 19.7.8.5
   title: Ensure 'Turn off Spotlight collection on Desktop' is set to 'Enabled'
-  path: HKCU:\Software\Policies\Microsoft\Windows\CloudContent
+  path: HKU:\Software\Policies\Microsoft\Windows\CloudContent
   name: DisableSpotlightCollectionOnDesktop
   type: dword
   value: 1
@@ -1589,7 +1589,7 @@ cis_registry_settings:
   path: HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon
   name: PasswordExpiryWarning
   type: dword
-  value: 14
+  value: '@PASSWORD_AGE_PROMPT@'
 - id: 2.3.7.7
   title: 'Ensure ''Interactive logon: Smart card removal behavior'' is set to ''Lock Workstation'' or higher'
   path: HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon
@@ -1652,6 +1652,12 @@ cis_registry_settings:
   name: EnableFirewall
   type: dword
   value: 1
+- id: 9.2.2
+  title: 'Ensure ''Windows Firewall: Private: Inbound connections'' is set to ''Block (default)'''
+  path: HKLM:\Software\Policies\Microsoft\WindowsFirewall\PrivateProfile
+  name: DefaultInboundAction
+  type: dword
+  value: 1
 - id: 9.2.3
   title: 'Ensure ''Windows Firewall: Private: Settings: Display a notification'' is set to ''No'''
   path: HKLM:\Software\Policies\Microsoft\WindowsFirewall\PrivateProfile
@@ -1686,6 +1692,12 @@ cis_registry_settings:
   title: 'Ensure ''Windows Firewall: Public: Firewall state'' is set to ''On (recommended)'''
   path: HKLM:\Software\Policies\Microsoft\WindowsFirewall\PublicProfile
   name: EnableFirewall
+  type: dword
+  value: 1
+- id: 9.3.2
+  title: 'Ensure ''Windows Firewall: Public: Inbound connections'' is set to ''Block (default)'''
+  path: HKLM:\Software\Policies\Microsoft\WindowsFirewall\PublicProfile
+  name: DefaultInboundAction
   type: dword
   value: 1
 - id: 9.3.3

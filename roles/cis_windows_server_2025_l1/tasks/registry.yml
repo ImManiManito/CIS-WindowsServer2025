@@ -34,7 +34,11 @@
 
 - name: Apply CIS DWORD and string HKU registry policies
   ansible.windows.win_regedit:
+<<<<<<< HEAD
+    path: "{{ item.1.path | regex_replace('^HKU:', \"HKU:\\\" ~ item.0.SID) }}"
+=======
     path: "{{ item.1.path | regex_replace('^HKU:', 'HKU:\\' ~ item.0.SID) }}"
+>>>>>>> 8372bfa582f8e3b0d6edf3cfce55a773f068805a
     name: "{{ item.1.name }}"
     data: "{{ item.1.value }}"
     type: "{{ item.1.type }}"
