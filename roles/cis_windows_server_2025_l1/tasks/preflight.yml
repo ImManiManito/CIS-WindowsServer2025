@@ -36,3 +36,59 @@
       - "Administrator: {{ cis_ssh_preflight.output[0].IsAdministrator }}"
       - "OpenSSH DefaultShell: {{ cis_ssh_preflight.output[0].OpenSSHDefaultShell | default('not configured') }}"
   when: cis_verify_ssh_powershell | bool
+
+- name: Detect localized system paths (language-agnostic)
+  ansible.windows.win_powershell:
+    script: |
+      # Get environment variables to detect localized paths
+      $systemRoot = $env:SystemRoot
+      $programFiles = $env:ProgramFiles
+      $programFilesX86 = $env:ProgramFiles + " (x86)"
+      $programData = $env:ProgramData
+      
+      # Get Users path - works in any Windows language
+      $usersPath = [System.IO.Path]::Combine($systemRoot, "..", "Users")
+      $usersPath = [System.IO.Path]::GetFullPath($usersPath)
+      
+      # Alternative: Use Win32_UserProfile to find any user path
+      $userProfilePath = (Get-CimInstance Win32_UserProfile -Filter "SID like 'S-1-5-21-%' and not LocalPath like '%$'" | Select-Object -First 1 -ExpandProperty LocalPath | Split-Path -Parent)
+      if ([string]::IsNullOrEmpty($userProfilePath) -or $userProfilePath -eq '\') {
+        $userProfilePath = $usersPath
+      }
+      
+      [pscustomobject]@{
+        SystemRoot = $systemRoot
+        UsersPath = $usersPath
+        UserProfilePath = $userProfilePath
+        ProgramFiles = $programFiles
+        ProgramFilesX86 = $programFilesX86
+        ProgramData = $programData
+        Temp = $env:TEMP
+        TMP = $env:TMP
+      }
+  register: cis_localized_paths_detected
+
+- name: Set localized paths as facts for use in playbook
+  ansible.builtin.set_fact:
+    cis_system_root: "{{ cis_localized_paths_detected.output[0].SystemRoot }}"
+    cis_users_path: "{{ cis_localized_paths_detected.output[0].UsersPath }}"
+    cis_user_profile_path: "{{ cis_localized_paths_detected.output[0].UserProfilePath }}"
+    cis_program_files: "{{ cis_localized_paths_detected.output[0].ProgramFiles }}"
+    cis_program_files_x86: "{{ cis_localized_paths_detected.output[0].ProgramFilesX86 }}"
+    cis_programdata: "{{ cis_localized_paths_detected.output[0].ProgramData }}"
+    cis_temp_path: "{{ cis_localized_paths_detected.output[0].Temp }}"
+    cis_powershell_path: "{{ cis_localized_paths_detected.output[0].SystemRoot }}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+    cis_event_log_path: "{{ cis_localized_paths_detected.output[0].SystemRoot }}\\System32\\winevt\\Logs"
+
+- name: Display detected system paths
+  ansible.builtin.debug:
+    msg: |
+      System paths detected (language-agnostic detection):
+      - System Root: {{ cis_system_root }}
+      - Users Path: {{ cis_users_path }}
+      - Program Files: {{ cis_program_files }}
+      - Program Files (x86): {{ cis_program_files_x86 }}
+      - ProgramData: {{ cis_programdata }}
+      - Temp: {{ cis_temp_path }}
+      - PowerShell Path: {{ cis_powershell_path }}
+      - Event Log Path: {{ cis_event_log_path }}

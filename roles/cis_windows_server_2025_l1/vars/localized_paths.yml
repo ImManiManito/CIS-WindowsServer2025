@@ -1,0 +1,23 @@
+---
+# Localized System Paths - Auto-detected and language-agnostic
+# These variables are automatically populated by the preflight task
+# They work with Windows Server in any language (English, Spanish, etc.)
+
+# System root paths (detected dynamically in preflight.yml)
+# cis_system_root: "C:\Windows"              # Detected from environment
+# cis_users_path: "C:\Users" or "C:\Usuarios"  # Detected dynamically
+# cis_program_files: "C:\Program Files" or "C:\Archivos de programa"  # Detected
+# cis_program_files_x86: "C:\Program Files (x86)" or similar  # Detected
+# cis_programdata: "C:\ProgramData"          # Detected
+
+# PowerShell paths (language-independent)
+cis_powershell_system_32: "C:\\Windows\\System32"
+cis_powershell_v1_path: "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+cis_powershell_v7_path: "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
+
+# Log paths (can be localized)
+# cis_event_log_path: "{{ cis_system_root }}\\System32\\winevt\\Logs"  # Will be set in preflight
+# cis_temp_path: "{{ cis_users_path }}\\..\\AppData\\Local\\Temp"  # Will be set in preflight
+
+# Script execution paths
+# cis_scripts_temp_path: "{{ cis_programdata }}\\Ansible\\Temp"  # Will be set in preflight
