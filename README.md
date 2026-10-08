@@ -2,6 +2,8 @@
 
 Proyecto de hardening generado a partir del archivo CIS `.audit` proporcionado.
 
+<img width="692" height="68" alt="Windows Server Stan Alone" src="https://github.com/user-attachments/assets/f7f5e40c-7c09-4133-a241-556905d72c5b" />
+
 ## Arquitectura prevista
 
 ```text
